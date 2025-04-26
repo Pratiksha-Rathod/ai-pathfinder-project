@@ -1,9 +1,9 @@
-
 import { useRef, useEffect, useState } from "react";
 import { ChatMessage, Message, MessageRole } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import { v4 as uuidv4 } from "uuid";
 import { Card } from "@/components/ui/card";
+import ChatHistory from "./ChatHistory";
 
 const generateResponse = async (message: string): Promise<string> => {
   // Simulate an API call delay
@@ -108,30 +108,34 @@ export const ChatContainer = () => {
   };
 
   return (
-    <Card className="flex flex-col h-[80vh] md:h-[85vh] max-w-4xl mx-auto overflow-hidden border border-gray-200 dark:border-gray-800 shadow-lg rounded-2xl">
-      <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white">
-        <h2 className="text-2xl font-bold tracking-tight">AI Assistant</h2>
-        <p className="text-sm text-purple-100">Powered by advanced AI technology</p>
-      </div>
+    <div className="flex h-[80vh] md:h-[85vh] max-w-6xl mx-auto">
+      <Card className="flex flex-1 flex-col overflow-hidden border border-gray-200 dark:border-gray-800 shadow-lg rounded-2xl">
+        <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white">
+          <h2 className="text-2xl font-bold tracking-tight">AI Assistant</h2>
+          <p className="text-sm text-purple-100">Powered by advanced AI technology</p>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 space-y-6">
+          {messages.map((message) => (
+            <ChatMessage key={message.id} message={message} />
+          ))}
+          {isLoading && (
+            <div className="flex items-center gap-3 text-purple-500 animate-pulse ml-2">
+              <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+              <div className="h-2 w-2 rounded-full bg-purple-500 animation-delay-200"></div>
+              <div className="h-2 w-2 rounded-full bg-purple-500 animation-delay-400"></div>
+              <span className="text-sm font-medium text-purple-600 dark:text-purple-400">AI is thinking...</span>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+        
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
+          <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
+        </div>
+      </Card>
       
-      <div className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 space-y-6">
-        {messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
-        ))}
-        {isLoading && (
-          <div className="flex items-center gap-3 text-purple-500 animate-pulse ml-2">
-            <div className="h-2 w-2 rounded-full bg-purple-500"></div>
-            <div className="h-2 w-2 rounded-full bg-purple-500 animation-delay-200"></div>
-            <div className="h-2 w-2 rounded-full bg-purple-500 animation-delay-400"></div>
-            <span className="text-sm font-medium text-purple-600 dark:text-purple-400">AI is thinking...</span>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-      
-      <div className="p-4 border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950">
-        <ChatInput onSendMessage={handleSendMessage} isLoading={isLoading} />
-      </div>
-    </Card>
+      <ChatHistory messages={messages} />
+    </div>
   );
 };
