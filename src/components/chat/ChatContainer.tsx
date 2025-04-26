@@ -1,3 +1,4 @@
+
 import { useRef, useEffect, useState } from "react";
 import { ChatMessage, Message, MessageRole } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
@@ -108,21 +109,21 @@ export const ChatContainer = () => {
 
   return (
     <Card className="flex flex-col h-[80vh] md:h-[85vh] max-w-4xl mx-auto overflow-hidden border border-gray-200 dark:border-gray-800 shadow-lg rounded-2xl">
-      <div className="bg-gradient-to-r from-ai-light to-ai p-4 text-white">
-        <h2 className="text-xl font-semibold">AI Assistant</h2>
-        <p className="text-sm opacity-80">Powered by advanced AI technology</p>
+      <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white">
+        <h2 className="text-2xl font-bold tracking-tight">AI Assistant</h2>
+        <p className="text-sm text-purple-100">Powered by advanced AI technology</p>
       </div>
       
-      <div className="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900">
+      <div className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 space-y-6">
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
         {isLoading && (
-          <div className="flex items-center gap-2 text-gray-500 animate-pulse-light ml-2">
-            <div className="h-2 w-2 rounded-full bg-ai"></div>
-            <div className="h-2 w-2 rounded-full bg-ai"></div>
-            <div className="h-2 w-2 rounded-full bg-ai"></div>
-            <span className="text-sm">AI is thinking...</span>
+          <div className="flex items-center gap-3 text-purple-500 animate-pulse ml-2">
+            <div className="h-2 w-2 rounded-full bg-purple-500"></div>
+            <div className="h-2 w-2 rounded-full bg-purple-500 animation-delay-200"></div>
+            <div className="h-2 w-2 rounded-full bg-purple-500 animation-delay-400"></div>
+            <span className="text-sm font-medium text-purple-600 dark:text-purple-400">AI is thinking...</span>
           </div>
         )}
         <div ref={messagesEndRef} />

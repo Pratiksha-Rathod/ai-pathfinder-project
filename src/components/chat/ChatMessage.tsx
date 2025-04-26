@@ -26,13 +26,13 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
     >
       <div 
         className={cn(
-          "px-4 py-3 rounded-2xl max-w-[85%] break-words",
+          "px-4 py-3 rounded-2xl max-w-[85%] shadow-sm break-words transition-all",
           isUser 
-            ? "bg-user text-white rounded-tr-none" 
-            : "bg-gray-100 dark:bg-gray-800 rounded-tl-none"
+            ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-tr-none" 
+            : "bg-white dark:bg-gray-800 rounded-tl-none border border-gray-100 dark:border-gray-700"
         )}
       >
-        <p>{message.content}</p>
+        <p className="text-sm md:text-base">{message.content}</p>
       </div>
     </div>
   );

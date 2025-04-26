@@ -27,16 +27,14 @@ export const ChatInput = ({ onSendMessage, isLoading }: ChatInputProps) => {
           placeholder="Type a message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="pr-10 py-6 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl"
+          className="pr-10 py-6 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-purple-500 transition-all"
           disabled={isLoading}
         />
       </div>
       <Button 
         type="submit" 
-        className={`rounded-xl p-3 h-auto ${isLoading ? 'opacity-70' : 'hover:bg-user-dark'}`}
-        variant="default"
+        className={`rounded-xl p-3 h-auto bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 transition-opacity ${isLoading ? 'opacity-70' : ''}`}
         disabled={isLoading || !message.trim()}
-        style={{ backgroundColor: 'hsl(280, 60%, 45%)' }}
       >
         <Send size={20} />
       </Button>
