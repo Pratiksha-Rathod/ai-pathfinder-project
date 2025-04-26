@@ -8,44 +8,41 @@ const generateResponse = async (message: string): Promise<string> => {
   // Simulate an API call delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // More natural, conversational responses
-  const conversations = {
+  const humanResponses = {
     greetings: [
-      "Hey there! How are you doing today?",
-      "Hi! It's great to chat with you. What's on your mind?",
-      "Hello! I'm all ears and ready to help you out."
+      "Hi! How are you today?",
+      "Hey there! How's it going?",
+      "Hello! How are you doing?",
+      "Hi! Nice to meet you! How's your day going?",
     ],
-    questions: [
-      "That's a thought-provoking question! Let me break it down for you...",
-      "Great question! Let me share some insights I have.",
-      "Hmm, interesting point. Here's what I think about that..."
+    howAreYou: [
+      "I'm doing great, thanks for asking! How about you?",
+      "I'm good, thanks! How has your day been so far?",
+      "I'm wonderful, thank you! How are you feeling today?",
     ],
     generic: [
-      "I totally get what you mean. Let me help you with that.",
-      "I've been thinking about your request, and here's my take...",
-      "You know, that reminds me of something important...",
-      "Let me walk you through this step by step.",
-      "Ah, I see exactly what you're getting at!"
+      "Oh, that's interesting! Tell me more about it.",
+      "Really? I'd love to hear more about that!",
+      "That sounds fascinating! Can you share more details?",
+      "Interesting perspective! What made you think about this?",
     ]
   };
 
-  // Clean and lowercase the message for easier matching
+  // Clean and lowercase the message for matching
   const cleanMessage = message.toLowerCase().trim();
 
-  // Check for greetings
-  if (/^(hi|hello|hey|howdy)/.test(cleanMessage)) {
-    return conversations.greetings[Math.floor(Math.random() * conversations.greetings.length)];
+  // Check for initial greetings
+  if (/^(hi|hello|hey|howdy)$/i.test(cleanMessage)) {
+    return humanResponses.greetings[Math.floor(Math.random() * humanResponses.greetings.length)];
   }
 
-  // Check for questions
-  if (cleanMessage.includes('?')) {
-    return conversations.questions[Math.floor(Math.random() * conversations.questions.length)] + 
-           " " + 
-           conversations.generic[Math.floor(Math.random() * conversations.generic.length)];
+  // Check for "how are you" variations
+  if (cleanMessage.includes('how are you') || cleanMessage.includes('how r u')) {
+    return humanResponses.howAreYou[Math.floor(Math.random() * humanResponses.howAreYou.length)];
   }
 
-  // Default conversational response
-  return conversations.generic[Math.floor(Math.random() * conversations.generic.length)];
+  // Default to generic engaging responses
+  return humanResponses.generic[Math.floor(Math.random() * humanResponses.generic.length)];
 };
 
 export const ChatContainer = () => {
