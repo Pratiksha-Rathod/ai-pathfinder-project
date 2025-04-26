@@ -1,4 +1,3 @@
-
 import { useRef, useEffect, useState } from "react";
 import { ChatMessage, Message, MessageRole } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
@@ -9,28 +8,44 @@ const generateResponse = async (message: string): Promise<string> => {
   // Simulate an API call delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Simple responses based on input
-  const responses = [
-    "I'm analyzing your request. Could you provide more details?",
-    "That's an interesting question. Let me think about it...",
-    "Based on my analysis, I would recommend considering multiple approaches to this problem.",
-    "The data suggests that there are several possible solutions to explore.",
-    "I've processed your request and found some relevant information.",
-    "According to my knowledge, there are various factors to consider here."
-  ];
-  
-  // For simple greetings
-  if (message.toLowerCase().includes("hello") || message.toLowerCase().includes("hi")) {
-    return "Hello! How can I assist you today?";
+  // More natural, conversational responses
+  const conversations = {
+    greetings: [
+      "Hey there! How are you doing today?",
+      "Hi! It's great to chat with you. What's on your mind?",
+      "Hello! I'm all ears and ready to help you out."
+    ],
+    questions: [
+      "That's a thought-provoking question! Let me break it down for you...",
+      "Great question! Let me share some insights I have.",
+      "Hmm, interesting point. Here's what I think about that..."
+    ],
+    generic: [
+      "I totally get what you mean. Let me help you with that.",
+      "I've been thinking about your request, and here's my take...",
+      "You know, that reminds me of something important...",
+      "Let me walk you through this step by step.",
+      "Ah, I see exactly what you're getting at!"
+    ]
+  };
+
+  // Clean and lowercase the message for easier matching
+  const cleanMessage = message.toLowerCase().trim();
+
+  // Check for greetings
+  if (/^(hi|hello|hey|howdy)/.test(cleanMessage)) {
+    return conversations.greetings[Math.floor(Math.random() * conversations.greetings.length)];
   }
-  
-  // For questions
-  if (message.toLowerCase().includes("?")) {
-    return "That's a good question. Based on available information, I would say it depends on the specific context.";
+
+  // Check for questions
+  if (cleanMessage.includes('?')) {
+    return conversations.questions[Math.floor(Math.random() * conversations.questions.length)] + 
+           " " + 
+           conversations.generic[Math.floor(Math.random() * conversations.generic.length)];
   }
-  
-  // Random response for other messages
-  return responses[Math.floor(Math.random() * responses.length)];
+
+  // Default conversational response
+  return conversations.generic[Math.floor(Math.random() * conversations.generic.length)];
 };
 
 export const ChatContainer = () => {
