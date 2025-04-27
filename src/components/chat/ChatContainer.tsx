@@ -111,8 +111,8 @@ export const ChatContainer = () => {
     <div className="flex h-[80vh] md:h-[85vh] max-w-6xl mx-auto">
       <Card className="flex flex-1 flex-col overflow-hidden border border-gray-200 dark:border-gray-800 shadow-lg rounded-2xl">
         <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white">
-          <h2 className="text-2xl font-bold tracking-tight">AI Assistant</h2>
-          <p className="text-sm text-purple-100">Powered by advanced AI technology</p>
+          <h2 className="text-2xl font-bold tracking-tight">Nova Chat</h2>
+          <p className="text-sm text-purple-100">Your AI Companion</p>
         </div>
         
         <div className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 space-y-6">
@@ -124,7 +124,7 @@ export const ChatContainer = () => {
               <div className="h-2 w-2 rounded-full bg-purple-500"></div>
               <div className="h-2 w-2 rounded-full bg-purple-500 animation-delay-200"></div>
               <div className="h-2 w-2 rounded-full bg-purple-500 animation-delay-400"></div>
-              <span className="text-sm font-medium text-purple-600 dark:text-purple-400">AI is thinking...</span>
+              <span className="text-sm font-medium text-purple-600 dark:text-purple-400">Nova is thinking...</span>
             </div>
           )}
           <div ref={messagesEndRef} />
