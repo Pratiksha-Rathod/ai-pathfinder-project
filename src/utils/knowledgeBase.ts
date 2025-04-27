@@ -21,7 +21,11 @@ const knowledgeResponses: Record<Topic, string[]> = {
     "Historians generally agree that {HISTORICAL_FIGURE} played a crucial role in {HISTORICAL_EVENT}, particularly through their {CONTRIBUTION}.",
     "The {TIME_PERIOD} was characterized by {CHARACTERISTIC}, which led to significant changes in how societies {SOCIETAL_CHANGE}.",
     "When we examine the historical context of {HISTORICAL_EVENT}, it's worth noting that {CONTEXT} was a major contributing factor.",
-    "Archaeological evidence suggests that ancient civilizations in {LOCATION} were quite advanced in {TECHNOLOGY_OR_PRACTICE} for their time."
+    "Archaeological evidence suggests that ancient civilizations in {LOCATION} were quite advanced in {TECHNOLOGY_OR_PRACTICE} for their time.",
+    "Chhatrapati {HISTORICAL_FIGURE} was a legendary ruler who {ACHIEVEMENT} during the {TIME_PERIOD}, significantly impacting {IMPACT_AREA}.",
+    "Under the leadership of {HISTORICAL_FIGURE}, the {EMPIRE_NAME} demonstrated remarkable {QUALITY} through {STRATEGY_OR_POLICY}.",
+    "The battle of {BATTLE_NAME} in {YEAR} showcased {HISTORICAL_FIGURE}'s brilliant {MILITARY_STRATEGY}, leading to {OUTCOME}.",
+    "Historical records from {TIME_PERIOD} indicate that {HISTORICAL_FIGURE}'s administration was known for {ADMINISTRATIVE_FEATURE}."
   ],
   geography: [
     "The region of {REGION} is known for its {GEOGRAPHICAL_FEATURE}, which has influenced local {INFLUENCE} for centuries.",
@@ -109,6 +113,38 @@ const facts = {
   "photography": "Photography was invented in the 1830s, with the first permanent photograph created by Joseph Nicéphore Niépce in 1826 or 1827."
 };
 
+// Define historical figures with detailed information
+const historicalFigures = {
+  "shivaji maharaj": {
+    name: "Chhatrapati Shivaji Maharaj",
+    birth: "1630",
+    death: "1680",
+    title: "Founder of the Maratha Empire",
+    achievements: [
+      "Founded the Maratha Empire in 1674",
+      "Established a progressive civil administration system",
+      "Pioneered guerrilla warfare tactics (Ganimi Kava)",
+      "Built and secured numerous sea forts along the Konkan coast",
+      "Promoted religious tolerance and cultural preservation"
+    ],
+    legacy: "Revolutionary leader who established a strong Hindu kingdom against Mughal dominance",
+    significantBattles: [
+      "Battle of Pratapgad (1659)",
+      "Battle of Kolhapur (1659)",
+      "Battle of Pavan Khind (1660)",
+      "Sacking of Surat (1664)",
+      "Battle of Purandar (1665)"
+    ],
+    innovations: [
+      "Naval warfare development",
+      "Advanced military organization",
+      "Progressive administrative systems",
+      "Cultural and religious inclusivity"
+    ]
+  }
+  // Add more historical figures here
+};
+
 // Function to identify the likely topic of a question
 const identifyTopic = (question: string): Topic => {
   const lowerCaseQuestion = question.toLowerCase();
@@ -153,6 +189,34 @@ const findRelevantFact = (question: string): string | null => {
     }
   }
   
+  return null;
+};
+
+// Enhanced response generation for historical figures
+const generateHistoricalFigureResponse = (query: string): string | null => {
+  const lowerQuery = query.toLowerCase();
+  
+  for (const [key, figure] of Object.entries(historicalFigures)) {
+    if (lowerQuery.includes(key)) {
+      return `
+${figure.name} (${figure.birth}-${figure.death}) was ${figure.title}. 
+
+Key Achievements:
+${figure.achievements.join('\n')}
+
+Historical Significance:
+${figure.legacy}
+
+Notable Battles:
+${figure.significantBattles.join('\n')}
+
+Innovations and Contributions:
+${figure.innovations.join('\n')}
+
+This information is based on historical records and scholarly research. Would you like to know more about any specific aspect of ${figure.name}'s life or achievements?
+      `.trim();
+    }
+  }
   return null;
 };
 
@@ -240,7 +304,13 @@ export const generateConversationalResponse = (message: string): string => {
 };
 
 // Main response generation function
-export const generateSmartResponse = async (message: string, attachment?: File | null): Promise<string> => {
+export const generateSmartResponse = async (content: string, attachment?: File | null): Promise<string> => {
+  // First check for specific historical figure queries
+  const historicalResponse = generateHistoricalFigureResponse(content);
+  if (historicalResponse) {
+    return historicalResponse;
+  }
+
   // Process attachment if present
   let attachmentAnalysis = "";
   if (attachment) {
@@ -306,14 +376,14 @@ export const generateSmartResponse = async (message: string, attachment?: File |
   await new Promise(resolve => setTimeout(resolve, delay));
   
   // Determine if the message is a question
-  const isQuestion = message.includes('?') || 
-                    /^(who|what|where|when|why|how|is|are|can|could|would|should|do|does|did)/i.test(message.trim());
+  const isQuestion = content.includes('?') || 
+                    /^(who|what|where|when|why|how|is|are|can|could|would|should|do|does|did)/i.test(content.trim());
   
   // If it's a question, generate a knowledgeable response
   if (isQuestion) {
-    return generateKnowledgeableResponse(message);
+    return generateKnowledgeableResponse(content);
   }
   
   // Otherwise, generate a conversational response
-  return generateConversationalResponse(message);
+  return generateConversationalResponse(content);
 };
