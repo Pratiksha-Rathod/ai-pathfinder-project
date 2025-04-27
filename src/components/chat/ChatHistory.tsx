@@ -5,6 +5,7 @@ import { History, ChevronDown, ChevronUp } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
 
 interface ChatHistoryProps {
   messages: Message[];
