@@ -1,7 +1,7 @@
 
 import { Message } from "./ChatMessage";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { History, ChevronDown, ChevronUp, Search } from "lucide-react";
+import { History, ChevronDown, ChevronUp, Search, Paperclip } from "lucide-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
