@@ -13,7 +13,7 @@ export const ChatContainer = () => {
     {
       id: "welcome-message",
       role: "assistant",
-      content: "Hello! I'm Nova, your AI assistant. I can help answer questions on history, science, arts, math, and many other topics. I can also analyze files you share. How can I assist you today?",
+      content: "Hey there! I'm Nova, your friendly AI assistant. Think of me as a helpful friend sitting right across from you. I can chat about history, science, arts, math, and tons of other stuff. Got files you want me to look at? Just share them and I'll help you make sense of them. So, what's on your mind today?",
       timestamp: new Date()
     }
   ]);
@@ -44,11 +44,15 @@ export const ChatContainer = () => {
     
     try {
       // Generate typing indicator delay based on message length
-      const typingDelay = Math.min(1500, Math.max(800, content.length * 10));
+      // Make the delay more human-like with some randomness
+      const baseDelay = Math.min(1500, Math.max(800, content.length * 10));
+      const randomFactor = Math.random() * 0.4 + 0.8; // Between 0.8 and 1.2
+      const typingDelay = Math.round(baseDelay * randomFactor);
+      
       await new Promise(resolve => setTimeout(resolve, typingDelay));
       
       // Get AI response using our enhanced knowledge system
-      const responseContent = await generateSmartResponse(content, attachment);
+      let responseContent = await generateSmartResponse(content, attachment);
       
       const aiResponse: Message = {
         id: uuidv4(),
@@ -62,11 +66,11 @@ export const ChatContainer = () => {
     } catch (error) {
       console.error("Error generating response:", error);
       
-      // Add error message
+      // Add error message with a more human tone
       const errorMessage: Message = {
         id: uuidv4(),
         role: "assistant",
-        content: "I'm sorry, I encountered an issue processing your request. Could we try again?",
+        content: "Oops! Something went wrong on my end. Could we try that one more time?",
         timestamp: new Date()
       };
       
@@ -85,7 +89,7 @@ export const ChatContainer = () => {
       <Card className="flex flex-1 flex-col overflow-hidden border border-gray-200 dark:border-gray-800 shadow-lg rounded-2xl">
         <div className="bg-gradient-to-r from-purple-600 to-pink-500 p-6 text-white">
           <h2 className="text-2xl font-bold tracking-tight">Nova Chat</h2>
-          <p className="text-sm text-purple-100">Your AI Companion</p>
+          <p className="text-sm text-purple-100">Your AI Friend</p>
         </div>
         
         <div className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 space-y-6">

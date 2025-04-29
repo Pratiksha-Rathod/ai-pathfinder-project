@@ -76,6 +76,42 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
         );
     }
   };
+
+  // Add personality to assistant messages
+  const addPersonalTouch = (content: string) => {
+    if (isUser) return content;
+
+    // Insert conversational cues and humanizing touches
+    let humanizedContent = content;
+    
+    // Add thinking pauses and conversational fillers
+    if (!content.includes("...") && content.length > 30 && Math.random() > 0.7) {
+      const sentences = content.split(/(?<=[.!?])\s+/);
+      if (sentences.length > 1) {
+        const insertPosition = Math.floor(sentences.length / 2);
+        sentences.splice(insertPosition, 0, "Hmm, let me think about this... ");
+        humanizedContent = sentences.join(" ");
+      }
+    }
+    
+    // Add personal touches at the beginning for longer responses
+    if (content.length > 100 && !content.startsWith("I")) {
+      const personalStarters = [
+        "I'd say that ",
+        "From what I understand, ",
+        "If I were to explain it, ",
+        "Looking at this question, "
+      ];
+      const starter = personalStarters[Math.floor(Math.random() * personalStarters.length)];
+      
+      // Only add if it makes grammatical sense
+      if (!/^[A-Z]/.test(content[0]) || /^[A-Z][a-z]+,/.test(content.slice(0, 10))) {
+        humanizedContent = starter + humanizedContent.charAt(0).toLowerCase() + humanizedContent.slice(1);
+      }
+    }
+    
+    return humanizedContent;
+  };
   
   return (
     <div 
@@ -92,7 +128,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
             : "bg-white dark:bg-gray-800 rounded-tl-none border border-gray-100 dark:border-gray-700"
         )}
       >
-        <p className="text-sm md:text-base">{message.content}</p>
+        <p className="text-sm md:text-base">{addPersonalTouch(message.content)}</p>
         {renderAttachment()}
         <span className={cn(
           "text-xs mt-1 self-end",

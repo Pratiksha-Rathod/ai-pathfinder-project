@@ -62,18 +62,19 @@ export const generateFactsResponse = async (query: string): Promise<string> => {
 
 // Helper function for general fact responses
 const generateGeneralFactResponse = (query: string, fact: any): string => {
-  let response = `${fact.type} with an age of ${fact.age}. `;
+  // More conversational tone for facts
+  let response = `So, about ${fact.type === 'Planet' ? 'planet Earth' : fact.type}... it's been around for ${fact.age}. `;
   
   if (fact.composition) {
-    response += `It is composed of ${fact.composition}. `;
+    response += `If you're wondering about what it's made of, it consists of ${fact.composition}. `;
   }
   
   if (fact.atmosphere) {
-    response += `Its atmosphere consists of ${fact.atmosphere}. `;
+    response += `The air we breathe? That's ${fact.atmosphere}. Pretty cool, right? `;
   }
   
   if (fact.facts) {
-    response += `\n\nInteresting facts:\n• ${fact.facts.join('\n• ')}`;
+    response += `\n\nHere are some interesting tidbits I thought you might like:\n• ${fact.facts.join('\n• ')}`;
   }
   
   return response;
@@ -81,18 +82,19 @@ const generateGeneralFactResponse = (query: string, fact: any): string => {
 
 // Helper function for famous personality responses
 const generateFamousPersonalityResponse = (query: string, person: any): string => {
-  let response = `${person.fullName} (${person.lifespan}), also known as ${person.alias}, was a ${person.nationality} figure. `;
+  // More personable, conversational biography
+  let response = `I love talking about ${person.fullName}! Living from ${person.lifespan}, most people know them as ${person.alias}. They were ${person.nationality}, and honestly, quite remarkable. `;
   
   if (person.contributions) {
-    response += `\n\nContributions:\n• ${person.contributions.join('\n• ')}`;
+    response += `\n\nTheir biggest contributions to our world were:\n• ${person.contributions.join('\n• ')}`;
   }
   
   if (person.quotes) {
-    response += `\n\nFamous quotes: ${person.quotes}`;
+    response += `\n\nSome of my favorite quotes from them: ${person.quotes}`;
   }
   
   if (person.legacy) {
-    response += `\n\nLegacy: ${person.legacy}`;
+    response += `\n\nWhat's really fascinating about their legacy: ${person.legacy}`;
   }
   
   return response;
@@ -102,30 +104,30 @@ const generateFamousPersonalityResponse = (query: string, person: any): string =
 const generateConversationalResponse = (query: string): string => {
   const lowercaseQuery = query.toLowerCase();
   
-  // Greeting patterns
+  // Greeting patterns - more casual and friendly
   if (lowercaseQuery.includes('hello') || 
       lowercaseQuery.includes('hi') || 
       lowercaseQuery.includes('hey')) {
-    return "Hello! I'm Nova, your AI assistant. How can I help you today?";
+    return "Hey there! Great to chat with you today. What's on your mind?";
   }
   
-  // Questions about the AI itself
+  // Questions about the AI itself - more personable
   if (lowercaseQuery.includes('who are you') || 
       lowercaseQuery.includes('what are you')) {
-    return "I'm Nova, an AI assistant designed to help answer questions on a wide variety of topics including history, science, arts, mathematics, geography, space, engineering, and general knowledge. How can I assist you today?";
+    return "I'm Nova! Think of me as your friendly AI chat companion. I love talking about all sorts of things - history, science, arts, math, geography, space stuff, engineering... you name it! What would you like to chat about today?";
   }
   
-  // How are you type questions
+  // How are you type questions - more conversational
   if (lowercaseQuery.includes('how are you')) {
-    return "I'm functioning well, thank you for asking! I'm here to help you with any questions you might have.";
+    return "I'm doing great, thanks for asking! It's always nice when someone checks in. How are you doing today? Anything I can help with?";
   }
   
-  // Thanks patterns
+  // Thanks patterns - warm response
   if (lowercaseQuery.includes('thank') || 
       lowercaseQuery.includes('thanks')) {
-    return "You're welcome! Feel free to ask if you have any other questions.";
+    return "You're very welcome! Always happy to help. Let me know if you need anything else - I'm right here!";
   }
   
-  // Default response for unrecognized queries
-  return "I don't have specific information on that topic yet. Would you like to know about history, science, arts, mathematics, geography, space, or engineering? I'd be happy to share what I know in those areas.";
+  // Default response for unrecognized queries - friendly and helpful
+  return "You know, I don't have specific details about that yet, but I'd love to chat about something similar! I'm pretty good with history, science, arts, math, geography, space exploration, and engineering topics. Would any of those interest you?";
 };
