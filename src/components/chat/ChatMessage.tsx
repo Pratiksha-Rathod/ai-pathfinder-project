@@ -77,7 +77,7 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
     }
   };
 
-  // Add personality to assistant messages
+  // Add personality to assistant messages with more human-like conversational patterns
   const addPersonalTouch = (content: string) => {
     if (isUser) return content;
 
@@ -89,7 +89,14 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
       const sentences = content.split(/(?<=[.!?])\s+/);
       if (sentences.length > 1) {
         const insertPosition = Math.floor(sentences.length / 2);
-        sentences.splice(insertPosition, 0, "Hmm, let me think about this... ");
+        const fillers = [
+          "Hmm, let me think about this... ",
+          "Let's see... ",
+          "Well, from what I know... ",
+          "Interesting question... "
+        ];
+        const filler = fillers[Math.floor(Math.random() * fillers.length)];
+        sentences.splice(insertPosition, 0, filler);
         humanizedContent = sentences.join(" ");
       }
     }
@@ -100,13 +107,33 @@ export const ChatMessage = ({ message }: ChatMessageProps) => {
         "I'd say that ",
         "From what I understand, ",
         "If I were to explain it, ",
-        "Looking at this question, "
+        "Looking at this question, ",
+        "In my experience, ",
+        "Based on what I've learned, "
       ];
       const starter = personalStarters[Math.floor(Math.random() * personalStarters.length)];
       
       // Only add if it makes grammatical sense
       if (!/^[A-Z]/.test(content[0]) || /^[A-Z][a-z]+,/.test(content.slice(0, 10))) {
         humanizedContent = starter + humanizedContent.charAt(0).toLowerCase() + humanizedContent.slice(1);
+      }
+    }
+    
+    // Add conversation enders for short responses
+    if (content.length < 100 && Math.random() > 0.7) {
+      const conversationContinuers = [
+        " How about you?",
+        " What do you think?",
+        " Does that make sense to you?",
+        " What else would you like to know?",
+        " How has your day been going?",
+        " What brings you here today?"
+      ];
+      
+      // Only add if it's appropriate for the content
+      if (!content.includes("?") && !content.endsWith("!")) {
+        const continuer = conversationContinuers[Math.floor(Math.random() * conversationContinuers.length)];
+        humanizedContent = humanizedContent.trim() + continuer;
       }
     }
     

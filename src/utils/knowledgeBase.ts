@@ -12,7 +12,8 @@ type Topic =
   | "literature"
   | "space"
   | "engineering"
-  | "general";
+  | "general"
+  | "conversation";
 
 // Knowledge patterns with educational content
 const knowledgeResponses: Record<Topic, string[]> = {
@@ -96,6 +97,20 @@ const knowledgeResponses: Record<Topic, string[]> = {
     "While there's ongoing research in this area, the current consensus suggests that {INSIGHT} is a significant factor in {TOPIC}.",
     "That's a fascinating subject! The relationship between {ELEMENT_1} and {ELEMENT_2} reveals a lot about how {SYSTEM} operates.",
     "Looking at various sources on this topic, it appears that {INSIGHT} has important implications for {IMPLICATION}."
+  ],
+  conversation: [
+    "Hey there! I'm doing great today. How about you?",
+    "Hi! It's nice to hear from you. How are you doing?",
+    "Hello! Nice to meet you. How's your day been?",
+    "Hey! I'm Nova. What's up with you today?",
+    "Hiiii! So good to chat with you. How's everything?",
+    "Hey there! I'm doing great today. How about you?",
+    "Hello! I'm good, thanks for checking in. What about you?",
+    "Hi! It's a pleasure. How has your day been so far?",
+    "Hey! Good to see you here. What's on your mind?",
+    "Hello there! I'm having a pretty good day. You?",
+    "Hey! I'm doing well, thanks for asking. How's life treating you?",
+    "Hi! I'm Nova, your AI friend. How's everything going on your end?"
   ]
 };
 
@@ -145,9 +160,100 @@ const historicalFigures = {
   // Add more historical figures here
 };
 
-// Function to identify the likely topic of a question
+// Enhanced casual greeting patterns
+const casualGreetings = [
+  "hi",
+  "hello",
+  "hey",
+  "yo",
+  "sup",
+  "hii",
+  "hiiii",
+  "heya",
+  "hola",
+  "howdy",
+  "greetings",
+  "what's up",
+  "wassup"
+];
+
+// Enhanced response patterns for different conversation starters
+const conversationStarters = {
+  greetings: [
+    "Hey there! How's it going today?",
+    "Hi! Great to hear from you. How are you doing?",
+    "Hello! Nice to meet you. How's your day been?",
+    "Hey! I'm Nova. What's up with you today?",
+    "Hiiii! So good to chat with you. How's everything?",
+    "Hey there! I'm doing great today. How about you?",
+    "Hello! I'm good, thanks for checking in. What about you?",
+    "Hi! It's a pleasure. How has your day been so far?",
+    "Hey! Good to see you here. What's on your mind?",
+    "Hello there! I'm having a pretty good day. You?",
+    "Hey! I'm doing well, thanks for asking. How's life treating you?",
+    "Hi! I'm Nova, your AI friend. How's everything going on your end?"
+  ],
+  howAreYou: [
+    "I'm doing great, thanks for asking! I'm always excited to have interesting conversations. How about you?",
+    "I'm good, thanks! Always ready to help and learn. What's new in your world?",
+    "I'm wonderful, thank you! I've been having some fascinating conversations today. How are things on your end?",
+    "I'm doing well! Each conversation teaches me something new. How has your day been shaping up?",
+    "Pretty good! Just hanging out and chatting with interesting people like you. How are you today?",
+    "I'm excellent! Always happy when someone checks in. What about yourself?",
+    "Not too bad at all! Life as an AI is pretty interesting. How's your day going?",
+    "I'm great! Been having some good chats today. How are you feeling?",
+    "All good on my end! Just here to chat and help. How's life treating you today?",
+    "I'm doing quite well! Thanks for asking. How about yourself?"
+  ],
+  thanks: [
+    "You're very welcome! I'm happy I could help. Is there anything else you'd like to know?",
+    "No problem at all! That's what I'm here for. Let me know if you need anything else.",
+    "Glad I could be of assistance! Don't hesitate to reach out if you have more questions.",
+    "My pleasure! I enjoy being helpful. What else can I assist you with today?",
+    "Anytime! That's why I'm here. Anything else you'd like to chat about?",
+    "You got it! Happy to help. What else is on your mind?",
+    "No worries! I'm always here to chat. Anything else you're curious about?",
+    "Happy to help! That's what friends are for. Need anything else?",
+    "It's nothing! I enjoy our conversations. What else would you like to discuss?",
+    "Don't mention it! Always a pleasure. What's next on your mind?"
+  ],
+  whatDoYouDo: [
+    "I'm Nova, your AI chat companion! I can talk about all sorts of topics, answer questions, help with ideas, or just chat about your day. What can I help you with?",
+    "I'm an AI designed to be your friendly chat buddy. I can discuss topics ranging from science to art, answer questions, or just have a casual conversation. What's on your mind?",
+    "I'm your AI assistant – think of me as a knowledgeable friend who's always ready to chat! I can help with information, brainstorming, or just keeping you company. What would you like to talk about?",
+    "I'm here to make your day a bit better through conversation! I can discuss various topics, answer questions, or just have a casual conversation. How can I help you today?"
+  ],
+  whatAreYou: [
+    "I'm Nova, an AI designed to be conversational and helpful! I'm here to chat, answer questions, or just keep you company. Think of me as a friendly AI companion. How can I make your day better?",
+    "I'm an AI chatbot created to have natural conversations. I try to be helpful, informative, and friendly – kind of like having a knowledgeable buddy to chat with! What would you like to talk about?",
+    "I'm an artificial intelligence designed to feel like you're chatting with a friend. I can discuss various topics, answer questions, or just have a casual conversation. What's on your mind today?",
+    "I'm your friendly neighborhood AI assistant! I'm programmed to be conversational and helpful - you can ask me questions, chat about your day, or discuss almost any topic. How can I help you today?"
+  ],
+  generic: [
+    "That's really interesting! I'd love to hear more about your thoughts on this.",
+    "I find that perspective fascinating. What led you to think about this topic?",
+    "That's a great point. I'm curious to know more about how you came to this conclusion.",
+    "I see where you're coming from. Would you like to explore this topic further together?",
+    "That's thought-provoking! I appreciate you sharing your insights with me.",
+    "Interesting! Tell me more about why you feel that way.",
+    "I hadn't thought about it like that before. Could you elaborate?",
+    "That's a unique perspective! What else do you think about this?",
+    "Fascinating point! How long have you been interested in this topic?",
+    "I really like how you explained that. What other ideas do you have?"
+  ],
+};
+
+// Function to identify the likely topic of a question, including casual conversation
 const identifyTopic = (question: string): Topic => {
-  const lowerCaseQuestion = question.toLowerCase();
+  const lowerCaseQuestion = question.toLowerCase().trim();
+  
+  // Check if this is a casual greeting
+  if (casualGreetings.some(greeting => 
+      lowerCaseQuestion === greeting || 
+      lowerCaseQuestion.startsWith(`${greeting} `) ||
+      lowerCaseQuestion.endsWith(` ${greeting}`))) {
+    return 'conversation';
+  }
   
   // Define keywords associated with each topic
   const topicKeywords: Record<Topic, string[]> = {
@@ -230,6 +336,13 @@ export const generateKnowledgeableResponse = (question: string): string => {
   
   // Otherwise, identify the topic and generate a response
   const topic = identifyTopic(question);
+  
+  // For casual conversation, return a direct response
+  if (topic === 'conversation') {
+    const responses = knowledgeResponses.conversation;
+    return responses[Math.floor(Math.random() * responses.length)];
+  }
+  
   const responseTemplates = knowledgeResponses[topic];
   
   // Select a random template from the identified topic
@@ -247,60 +360,62 @@ export const generateKnowledgeableResponse = (question: string): string => {
   })} Would you like me to elaborate on any specific part of this?`;
 };
 
-// Function to generate human-like response to conversational inputs
+// Enhanced function to generate human-like response to conversational inputs
 export const generateConversationalResponse = (message: string): string => {
   // Original conversational logic
   const cleanMessage = message.toLowerCase().trim();
   
-  // Conversational patterns
-  const humanResponses = {
-    greetings: [
-      "Hi there! How are you doing today? Is there something specific I can help you with?",
-      "Hey! Great to hear from you. How's your day going so far?",
-      "Hello! It's nice to connect with you. What's on your mind today?",
-      "Hi! I'm Nova, your AI assistant. How can I make your day better?",
-    ],
-    howAreYou: [
-      "I'm doing great, thanks for asking! I'm always excited to have interesting conversations. How about you?",
-      "I'm good, thanks! Always ready to help and learn. What's new in your world?",
-      "I'm wonderful, thank you! I've been having some fascinating conversations today. How are things on your end?",
-      "I'm doing well! Each conversation teaches me something new. How has your day been shaping up?",
-    ],
-    thanks: [
-      "You're very welcome! I'm happy I could help. Is there anything else you'd like to know?",
-      "No problem at all! That's what I'm here for. Let me know if you need anything else.",
-      "Glad I could be of assistance! Don't hesitate to reach out if you have more questions.",
-      "My pleasure! I enjoy being helpful. What else can I assist you with today?",
-    ],
-    generic: [
-      "That's really interesting! I'd love to hear more about your thoughts on this.",
-      "I find that perspective fascinating. What led you to think about this topic?",
-      "That's a great point. I'm curious to know more about how you came to this conclusion.",
-      "I see where you're coming from. Would you like to explore this topic further together?",
-      "That's thought-provoking! I appreciate you sharing your insights with me.",
-    ],
-  };
-
   // Check for greeting patterns
-  if (/^(hi|hello|hey|howdy|greetings|morning|afternoon|evening)$/i.test(cleanMessage) || 
-      cleanMessage.startsWith('hi ') || cleanMessage.startsWith('hello ') || 
-      cleanMessage.startsWith('hey ') || cleanMessage.startsWith('good ')) {
-    return humanResponses.greetings[Math.floor(Math.random() * humanResponses.greetings.length)];
+  if (casualGreetings.some(greeting => 
+      cleanMessage === greeting || 
+      cleanMessage.startsWith(`${greeting} `) ||
+      cleanMessage.endsWith(` ${greeting}`))) {
+    return conversationStarters.greetings[Math.floor(Math.random() * conversationStarters.greetings.length)];
   }
 
   // Check for "how are you" variations
-  if (cleanMessage.includes('how are you') || cleanMessage.includes('how r u') || 
-      cleanMessage.includes('how\'re you') || cleanMessage.includes('how you doing')) {
-    return humanResponses.howAreYou[Math.floor(Math.random() * humanResponses.howAreYou.length)];
+  if (cleanMessage.includes('how are you') || 
+      cleanMessage.includes('how r u') || 
+      cleanMessage.includes('how\'re you') || 
+      cleanMessage.includes('how you doing') ||
+      cleanMessage.includes('how are u') ||
+      cleanMessage.includes('how is it going') ||
+      cleanMessage.includes('how\'s it going') ||
+      cleanMessage === 'sup' ||
+      cleanMessage === 'wassup' ||
+      cleanMessage === 'what\'s up' ||
+      cleanMessage === 'whats up') {
+    return conversationStarters.howAreYou[Math.floor(Math.random() * conversationStarters.howAreYou.length)];
   }
 
   // Check for thank you patterns
-  if (cleanMessage.includes('thank') || cleanMessage.includes('thanks') || cleanMessage.includes('appreciate')) {
-    return humanResponses.thanks[Math.floor(Math.random() * humanResponses.thanks.length)];
+  if (cleanMessage.includes('thank') || 
+      cleanMessage.includes('thanks') || 
+      cleanMessage.includes('appreciate') ||
+      cleanMessage.includes('thx')) {
+    return conversationStarters.thanks[Math.floor(Math.random() * conversationStarters.thanks.length)];
+  }
+  
+  // Check for "what do you do" variations
+  if (cleanMessage.includes('what do you do') ||
+      cleanMessage.includes('what can you do') ||
+      cleanMessage.includes('help me with') ||
+      cleanMessage.includes('what are your capabilities') ||
+      cleanMessage.includes('what can i ask you')) {
+    return conversationStarters.whatDoYouDo[Math.floor(Math.random() * conversationStarters.whatDoYouDo.length)];
+  }
+  
+  // Check for "what are you" variations
+  if (cleanMessage.includes('what are you') ||
+      cleanMessage.includes('who are you') ||
+      cleanMessage.includes('are you an ai') ||
+      cleanMessage.includes('are you human') ||
+      cleanMessage.includes('are you a bot')) {
+    return conversationStarters.whatAreYou[Math.floor(Math.random() * conversationStarters.whatAreYou.length)];
   }
 
   // Default to generic responses
-  return humanResponses.generic[Math.floor(Math.random() * humanResponses.generic.length)];
+  return conversationStarters.generic[Math.floor(Math.random() * conversationStarters.generic.length)];
 };
 
 // Main response generation function
@@ -309,6 +424,20 @@ export const generateSmartResponse = async (content: string, attachment?: File |
   const historicalResponse = generateHistoricalFigureResponse(content);
   if (historicalResponse) {
     return historicalResponse;
+  }
+  
+  // Check if this is a casual greeting or conversation starter
+  const cleanContent = content.toLowerCase().trim();
+  if (casualGreetings.some(greeting => 
+      cleanContent === greeting || 
+      cleanContent.startsWith(`${greeting} `) ||
+      cleanContent.endsWith(` ${greeting}`)) ||
+      cleanContent.includes('how are you') ||
+      cleanContent === 'sup' ||
+      cleanContent === 'wassup' ||
+      cleanContent === 'what\'s up' ||
+      cleanContent === 'whats up') {
+    return generateConversationalResponse(content);
   }
 
   // Process attachment if present
